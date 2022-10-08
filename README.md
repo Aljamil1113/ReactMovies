@@ -13,3 +13,5 @@ dotnet dev-certs https --trust
 
 # CLIENT
 npm install bootstrap@5.0
+npm i react-router-dom@5.2
+npm i --save-dev @types/react-router-dom
