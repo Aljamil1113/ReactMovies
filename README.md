@@ -15,3 +15,15 @@ dotnet dev-certs https --trust
 npm install bootstrap@5.0
 npm i react-router-dom@5.2
 npm i --save-dev @types/react-router-dom
+
+# REACT FORMS
+npm i formik@2.2.9 
+npm install yup@0.32.9
+npm i react-markdown typed-react-markdown
+
+npm install --save-react leaflet@1.7.1 react-leaflet@3.1.0 @react-leaflet/core@1.0.2
+npm i -D @types/leaflet
+
+
+npm i react-bootstrap-typeahead@5.2.2
+npm i -D @types/react-bootstrap-typeahead@5.2.2

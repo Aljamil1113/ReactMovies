@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import ActorForm from "./ActorForm";
 
 export default function CreateActor() {
     return (
         <>
             <h3>Create Actor</h3>
-            <Link to="/actors/create">Create Actor</Link>
+            <ActorForm model={{name: '', dateOfBirth: undefined}}
+                onSubmit={values => console.log(values)}
+            />
         </>
     )
 }
