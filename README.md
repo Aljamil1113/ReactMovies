@@ -26,4 +26,6 @@ npm i -D @types/leaflet
 
 
 npm i react-bootstrap-typeahead@5.2.2
-npm i -D @types/react-bootstrap-typeahead@5.2.2
+npm i -D @types/react-bootstrap-typeahead@5.1.8
+
+npm i axios@0.21.1

@@ -28,10 +28,8 @@ export default function EditMovie() {
                 onSubmit={values => console.log(values)}
                 nonSelectedGenres={nonSelectedGenres}
                 selectedGenres={selectedGenres}
-
                 nonSelectedMovieTheaters={nonSelectedMovieTheaters}
                 selectedMovieTheaters={selectedMovieTheaters}
-
                 selectedActors={actors}
             />
         </>

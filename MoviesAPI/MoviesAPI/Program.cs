@@ -1,3 +1,5 @@
+
+using System.Configuration;
 using MoviesAPI.Filters;
 using MoviesAPI.Services;
 
@@ -12,10 +14,18 @@ builder.Services.AddControllers(options =>
 builder.Services.AddResponseCaching();
 //builder.Services.AddAuthentication(JwtBearerDefault);
 builder.Services.AddSingleton<IRepository, InMemoryRepository>();
-builder.Services.AddTransient<MyActionFilter>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(opt =>
+{
+    var frontendUrl = ConfigurationBinder.GetValue<string>(builder.Configuration, "frontend_url");
+    opt.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins(frontendUrl).AllowAnyMethod().AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -28,6 +38,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors();
+
+app.UseRouting();
 app.UseResponseCaching();
 
 app.UseAuthorization();
