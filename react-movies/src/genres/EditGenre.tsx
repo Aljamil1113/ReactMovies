@@ -1,47 +1,24 @@
-import axios, { AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
-import { urlGenres } from "../endpoints";
-import DisplayErrors from "../utils/DisplayErrors";
-import Loading from "../utils/Loading";
-import { genreCreationDTO } from "./genre.model";
+
+
 import GenreForm from "./GenreForm";
+import EditEntity from "../utils/EditEntity";
+import { genreCreationDTO, genreDto } from "./genre.model";
+import { urlGenres } from "../endpoints";
 
-        export default function EditGenre() {
-            const {id}:any = useParams();
-
-            const [genre, setGenre] = useState<genreCreationDTO>();
-            const [errors, setErrors] = useState<string[]>([]);
-            const history = useHistory();
-
-            useEffect(() => {
-                axios.get(`${urlGenres}/${id}`)
-                .then((response: AxiosResponse<genreCreationDTO>) => {
-                    setGenre(response.data);
-                })
-            }, [id])
-
-            async function edit(genreToEdit: genreCreationDTO) {
-                try {
-                    await axios.put(`${urlGenres}/${id}`, genreToEdit);
-                    history.push('/genres');
-                } 
-                catch(error: any) {
-                    if(error && error.response) {
-                        setErrors(error.response.data);
-                    }
-                }
-            }
-
-            return (
-                <>
-                    <h3>Edit Genre</h3>
-                    <DisplayErrors errors={errors} />
-                    {genre ? <GenreForm model={genre} 
+export default function EditGenre() {
+    return (
+        <>
+             <EditEntity<genreCreationDTO, genreDto>
+                url={urlGenres} entityName="Genres" indexUrl="/genres"
+                >
+                {(entity, edit) => 
+                    <GenreForm model={entity}
                         onSubmit={async value => {
-                        await edit(value);
-                        }} /> : <Loading />}
-                    
-                </>
-            )
+                            await edit(value);
+                }}
+                 />
+                } 
+                </EditEntity>
+        </>
+     )
 }
