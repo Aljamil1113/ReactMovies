@@ -1,7 +1,7 @@
 export interface movieTheaterCreationDTO {
     name: string;
     latitude?: number;
-    longitude:? number;
+    longitude?: number;
 }
 
 export interface movieTheaterDTO {

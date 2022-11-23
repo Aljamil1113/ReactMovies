@@ -5,6 +5,8 @@ using MoviesAPI.ApiBehavior;
 using MoviesAPI.Filters;
 using MoviesAPI.Helpers;
 using MoviesAPI.Services;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,9 +26,20 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), 
+sqlOptions => sqlOptions.UseNetTopologySuite()));
+
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+
+builder.Services.AddSingleton(provider => new MapperConfiguration(config =>
+{
+    var geometryFactory = provider.GetRequiredService<GeometryFactory>();
+    config.AddProfile(new AutoMapperProfiles(geometryFactory));
+}).CreateMapper());
+
+builder.Services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
+
 builder.Services.AddScoped<IFileStorageService, InAppStorageService>();
 builder.Services.AddHttpContextAccessor();
 

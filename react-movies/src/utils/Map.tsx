@@ -18,7 +18,7 @@ export default function Map(props: mapProps) {
     const [coordinates, setCoordinates] = useState<coordinateDTO[]>(props.coordinates);
     return (
         <MapContainer
-            center={[18.482214, -69.914311]} zoom={14} style={{height: props.height}}
+            center={[14.585400268095125, 121.05724434336737]} zoom={14} style={{height: props.height}}
         >
             <TileLayer attribution="React Movies" url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"/>
 
