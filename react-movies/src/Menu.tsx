@@ -26,7 +26,12 @@ export default function Menu() {
                                 <NavLink className="nav-link" to="/movietheaters">
                                     Movie Theaters
                                 </NavLink>
-                            </li>                              
+                            </li>  
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/movies/create">
+                                    Create Movies
+                                </NavLink>
+                            </li>                               
                         </ul>
                     </div>
             </div>

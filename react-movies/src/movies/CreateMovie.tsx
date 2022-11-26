@@ -1,37 +1,64 @@
-import { actorMovieDTO } from "../actors/actor.model";
+import axios, { AxiosResponse } from "axios";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { urlMovies } from "../endpoints";
 import { genreDto } from "../genres/genre.model";
 import { movieTheaterDTO } from "../movietheaters/movieTheater.model";
+import DisplayErrors from "../utils/DisplayErrors";
+import { convertMovieToFormData } from "../utils/formDataUtil";
+import Loading from "../utils/Loading";
 import MovieForm from "./MovieForm";
-import { movieCreationDTO } from "./movies.model";
+import { movieCreationDTO, moviesPostGetDTO } from "./movies.model";
 
 export default function CreateMovie() {
+    
+    const [nonSelectedGenres, setNonSelectedGenres] = useState<genreDto[]>([]);
+    const [nonSelectedMovieTheaters, setNonSelectedMovieTheaters] = useState<movieTheaterDTO[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const nonSelectedGenres: genreDto[] = [{id: 1, name: 'Comedy'}, {id: 2, name: 'Drama'}]
-    const nonSelectedMovieTheaters: movieTheaterDTO[] = [{id: 1, name: 'Sambil'}, {id: 2, name: 'Agora'}]
+    const [errors, setErrors] = useState<string[]>([]);
+    const history = useHistory();
 
-    const actors: actorMovieDTO[] = [{
-        id: 1, name: 'Felipe', character: '', picture: 'https://en.wikipedia.org/wiki/File:John_Cena_July_2018.jpg'
-    },
-    {
-        id: 2, name: 'Fernando', character: '', picture: 'https://en.wikipedia.org/wiki/File:Brock_Lesnar_in_March_2015.jpg'
-    },
-    {
-        id: 3, name: 'Jessica', character: '', picture: 'https://en.wikipedia.org/wiki/File:StacyKeibler2011.jpeg'
-    }];
+    useEffect(() => {
+        axios.get(`${urlMovies}/postget`)
+            .then((response: AxiosResponse<moviesPostGetDTO>) => {
+                setNonSelectedGenres(response.data.genres);
+                setNonSelectedMovieTheaters(response.data.movieTheaters);
+                setLoading(false);    
+            })
+    }, [])
+
+    async function create(movie: movieCreationDTO) {
+        try {
+            const formData = convertMovieToFormData(movie);
+            const response = await axios({
+                method: 'post',
+                url: urlMovies,
+                data: formData,
+                headers: {'Content-Type': 'multipart/form-data'}
+            })
+
+            history.push(`/movie/${response.data}`)
+        } catch (error: any) {
+            setErrors(error.response.data)
+        }
+    }
 
     return (
         <>
             <h3>Create Movie</h3>
+            <DisplayErrors errors={errors} />
+            {loading ? <Loading /> : 
             <MovieForm model={{title: '', inTheaters: false, trailer: ''}} 
-            onSubmit={values => console.log(values)}
+            onSubmit={async values => await create(values)}
             nonSelectedGenres={nonSelectedGenres}
             selectedGenres={[]}
 
             nonSelectedMovieTheaters={nonSelectedMovieTheaters}
             selectedMovieTheaters={[]}
-
-            selectedActors={actors}
+            selectedActors={[]}
             />
+            }
         </>
     )
 }

@@ -1,4 +1,4 @@
-import { Form, Formik, FormikHelpers, yupToFormErrors } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { movieCreationDTO } from "./movies.model.d";
 import * as Yup from 'yup';
 import Button from "../utils/Button";
@@ -13,6 +13,7 @@ import { genreDto } from "../genres/genre.model";
 import { movieTheaterDTO } from "../movietheaters/movieTheater.model";
 import TypeAheadActor from "../forms/TypeAheadActor";
 import { actorMovieDTO } from "../actors/actor.model";
+import MarkdownField from "../forms/MarkdownField";
 
 export default function MovieForm(props: movieFormProps) {
 
@@ -50,7 +51,9 @@ export default function MovieForm(props: movieFormProps) {
                     <CheckboxField displayName="In Theaters" field="inTheaters"/>
                     <TextField displayName="Trailer" field="trailer"/>
                     <DateField displayName="Release Date" field="releaseDate"/>
-                    <ImageField displayName="Poster" field="poster" imageURL={props.model.posterURL}/>
+                    <ImageField displayName="Poster" field="poster" imageURL={props.model.posterURL}/>\
+
+                    <MarkdownField displayName="Summary" field="summary" />
 
                     <MultipleSelector 
                         displayName="Genres"
@@ -75,7 +78,29 @@ export default function MovieForm(props: movieFormProps) {
                     <TypeAheadActor displayName="Actors" actors={selectedActors} 
                     onAdd={actors => {
                         setSelectedActors(actors);
-                    }} />
+                    }} 
+
+                    onRemove={actor => {
+                        const actors = selectedActors.filter(x => x !== actor);
+                        setSelectedActors(actors);
+                    }}
+                    
+                    listUI={(actor: actorMovieDTO) => 
+                        <>
+                            {actor.name} / <input placeholder="Character" type="text"
+                                value={actor.character} 
+                                onChange={e => {
+                                    const index = selectedActors.findIndex(x => x.id === actor.id);
+
+                                    const actors = [...selectedActors];
+                                    actors[index].character = e.currentTarget.value;
+                                    setSelectedActors(actors);
+                                }}
+                            />
+                        </>
+                    }
+
+                    />
 
                     <Button disabled={formikProps.isSubmitting} type='submit' >Save Changes</Button>
                     <Link className="btn btn-secondary" to="/movies">Cancel</Link>

@@ -98,5 +98,14 @@ namespace MoviesAPI.Controllers
             await fileStorageService.DeleteFile(actor.Picture, containerName);
             return NoContent();
         }
+
+        [HttpGet("searchByName/{query}")]
+        public async Task<ActionResult<List<ActorsMovieDTO>>> SearchByName(string query)
+        {
+            if(string.IsNullOrEmpty(query)) { return new List<ActorsMovieDTO>(); }
+
+            return await context.Actors.Where(x => x.Name.Contains(query)).OrderBy(x => x.Name)
+                .Select(x => new ActorsMovieDTO{ Id = x.Id, Name = x.Name, Picture = x.Picture  }).Take(5).ToListAsync();
+        }
     }
 }
