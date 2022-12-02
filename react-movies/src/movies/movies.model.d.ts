@@ -6,6 +6,13 @@ export interface movieDto {
     id: number;
     title: string;
     poster: string;
+    inTheaters: boolean;
+    trailer: string;
+    summary?: string;
+    releaseDate: Date;
+    genreIds: genreDto[];
+    movieTheaters: movieTheaterDTO[];
+    actors: actorMovieDTO[];
 }
 
 export interface movieCreationDTO {
@@ -23,7 +30,7 @@ export interface movieCreationDTO {
 
 export interface landingPageDTO {
     inTheaters?: movieDto[];
-    upcomingRelease?: movieDto[]
+    upcomingReleases?: movieDto[]
 }
 
 export interface moviesPostGetDTO {

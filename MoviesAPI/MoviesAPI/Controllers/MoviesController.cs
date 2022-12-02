@@ -36,6 +36,49 @@ namespace MoviesAPI.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult<LandingPageDto>> Get()
+        {
+            var top = 6;
+            var today = DateTime.Today;
+
+            var upcomingReleases = await context.Movies.Where(x => x.ReleaseDate > today)
+                .OrderBy(x => x.ReleaseDate)
+                .Take(top)
+                .ToListAsync();
+
+            var inTheaters = await context.Movies
+                .Where(x => x.InTheaters)
+                .OrderBy(x => x.ReleaseDate)
+                .Take(top)
+                .ToListAsync();
+
+            var landingPageDto = new LandingPageDto();
+            landingPageDto.UpcomingReleases = mapper.Map<List<MovieDto>>(upcomingReleases);
+            landingPageDto.InTheaters = mapper.Map<List<MovieDto>>(inTheaters);
+
+            return landingPageDto;
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<MovieDto>> Get(int id)
+        {
+            var movie = await context.Movies
+                .Include(x => x.MoviesGenres).ThenInclude(x => x.Genre)
+                .Include(x => x.MovieTheaterMovies).ThenInclude(x => x.MovieTheater)
+                .Include(x => x.MoviesActors).ThenInclude(x => x.Actor)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if(movie == null)
+            {
+                return NotFound();
+            }
+
+            var dto = mapper.Map<MovieDto>(movie);
+            dto.Actors = dto.Actors.OrderBy(x => x.Order).ToList();
+            return dto;
+        }
+
         [HttpGet("PostGet")]
         public async Task<ActionResult<MoviePostGetDTO>> PostGet()
         {
