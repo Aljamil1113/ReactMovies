@@ -26,6 +26,7 @@ namespace MoviesAPI.Helpers
                 geometryFactory.CreatePoint(new Coordinate(dto.Longitude, dto.Latitude))));
 
             CreateMap<MovieCreationDTO, Movie>()
+                .ForMember(x => x.Id, dto => dto.MapFrom(props => props.Id))
                 .ForMember(x => x.Poster, options => options.Ignore())
                 .ForMember(x => x.MoviesGenres, options => options.MapFrom(MapMoviesGenres))
                 .ForMember(x => x.MovieTheaterMovies, options => options.MapFrom(MapMovieTheaterMovies))

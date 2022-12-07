@@ -10,13 +10,13 @@ import Map from "../utils/Map";
 
 export default function MovieDetails() {
     const {id} : any = useParams();
-    const[movie, setMovie] = useState<movieDto>();
+    const[movie, setMovies] = useState<movieDto>();
     
     useEffect(() =>  {
         axios.get(`${urlMovies}/${id}`)
         .then((response: AxiosResponse<movieDto>) => {
             response.data.releaseDate = new Date(response.data.releaseDate);
-            setMovie(response.data);
+            setMovies(response.data);
         })
     }, [id]);
 

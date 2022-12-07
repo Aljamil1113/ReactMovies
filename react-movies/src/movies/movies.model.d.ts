@@ -37,3 +37,12 @@ export interface moviesPostGetDTO {
     genres: genreDto[];
     movieTheaters: movieTheaterDTO[];
 }
+
+export interface moviePutGetDTO {
+    movie: movieDto;
+    selectedGenres: genreDto[];
+    nonSelectedGenres: genreDto[];
+    selectedMovieTheaters: movieTheaterDTO[];
+    nonSelectedMovieTheaters: movieTheaterDTO[];
+    actors: actorMovieDTO[];
+}
