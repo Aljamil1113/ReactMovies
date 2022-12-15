@@ -1,5 +1,8 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MoviesAPI;
 using MoviesAPI.ApiBehavior;
 using MoviesAPI.Filters;
@@ -7,6 +10,7 @@ using MoviesAPI.Helpers;
 using MoviesAPI.Services;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,7 @@ builder.Services.AddControllers(options =>
     options.Filters.Add(typeof(MyExceptionFilter));
     options.Filters.Add(typeof(ParseBadRequest));
 }).ConfigureApiBehaviorOptions(BadRequestBehavior.Parse);
+
 builder.Services.AddResponseCaching();
 //builder.Services.AddAuthentication(JwtBearerDefault);
 builder.Services.AddSingleton<IRepository, InMemoryRepository>();
@@ -24,6 +29,24 @@ builder.Services.AddSingleton<IRepository, InMemoryRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["keyjwt"])),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), 
