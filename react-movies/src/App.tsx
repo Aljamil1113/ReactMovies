@@ -12,7 +12,7 @@ import AuthenticationContext from './auth/AuthenticationContext';
 function App() {
 
   const [claims, setClaims] = useState<claim[]>([
-    {name: 'email', value: 'felipe@hotmail.com'}
+   // {name: 'email', value: 'felipe@hotmail.com'}
   ]);
 
   function isAdmin() {
