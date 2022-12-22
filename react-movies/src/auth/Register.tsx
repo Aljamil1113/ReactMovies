@@ -1,18 +1,26 @@
 import axios from "axios";
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { urlAccounts } from "../endpoints";
 import DisplayErrors from "../utils/DisplayErrors";
 import { authenticationResponse, userCredentials } from "./auth.model";
 import AuthForm from "./AuthForm";
+import { getClaims, saveToken } from "./handleJWT";
+import AuthenticationContext from "./AuthenticationContext";
+import { useHistory } from "react-router-dom";
 
 export default function Register() {
     const [errors, setErrors] = useState<string[]>([]);
+    const {update} = useContext(AuthenticationContext);
+
+    const history = useHistory();
 
     async function register(credentials: userCredentials) {
         try{
             setErrors([]);
             const response = await axios.post<authenticationResponse>(`${urlAccounts}/create`, credentials);
-            console.log(response);
+            saveToken(response.data);
+            update(getClaims());
+            history.push('/');
         }
         catch(error: any) {
             setErrors(error.response.data);
