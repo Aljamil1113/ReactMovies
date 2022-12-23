@@ -9,6 +9,11 @@ import { useEffect, useState } from 'react';
 import { claim } from './auth/auth.model';
 import AuthenticationContext from './auth/AuthenticationContext';
 import { getClaims } from './auth/handleJWT';
+import configureValidations from './Validation';
+import configureInterceptor from './utils/httpinterceptors';
+
+configureValidations();
+configureInterceptor();
 
 function App() {
 

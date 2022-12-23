@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -13,6 +15,7 @@ namespace MoviesAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsAdmin")]
     public class GenresController : ControllerBase
     {
         private readonly IRepository repository;
@@ -40,6 +43,7 @@ namespace MoviesAPI.Controllers
         }
 
         [HttpGet("all")] //api/genres
+        [AllowAnonymous]
         public async Task<ActionResult<List<GenreDto>>> All()
         {         
             var genres = await context.Genres.OrderBy(x => x.Name).ToListAsync();

@@ -29,6 +29,12 @@ builder.Services.AddResponseCaching();
 //builder.Services.AddAuthentication(JwtBearerDefault);
 builder.Services.AddSingleton<IRepository, InMemoryRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IsAdmin", policy => policy.RequireClaim("role", "admin"));
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
