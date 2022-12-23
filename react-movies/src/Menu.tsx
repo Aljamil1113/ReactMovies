@@ -48,10 +48,15 @@ export default function Menu() {
                                 <NavLink className="nav-link" to="/movies/create">
                                     Create Movies
                                 </NavLink>
-                            </li>       
+                            </li>        
                                     </>
                                 }
                             />
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/users">
+                                    Users
+                                </NavLink>
+                            </li> 
                                                
                         </ul>
                         <div className="d-flex">

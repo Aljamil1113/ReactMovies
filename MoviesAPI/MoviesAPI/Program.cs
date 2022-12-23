@@ -17,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+//JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddControllers(options =>
 {
@@ -32,7 +32,7 @@ builder.Services.AddSingleton<IRepository, InMemoryRepository>();
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("IsAdmin", policy => policy.RequireClaim("role", "admin"));
+    options.AddPolicy("isAdmin", policy => policy.RequireClaim("role", "admin"));
 });
 
 builder.Services.AddEndpointsApiExplorer();

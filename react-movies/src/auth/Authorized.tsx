@@ -2,7 +2,7 @@ import { ReactElement, useContext, useEffect, useState } from "react";
 import AuthenticationContext from "./AuthenticationContext";
 
 export default function Authorized(props: authorizedProps) {
-    const [isAuthorized, setIsAuthorized] = useState(false);
+    const [isAuthorized, setIsAuthorized] = useState(true);
     const {claims} = useContext(AuthenticationContext);
 
     useEffect(() => {
